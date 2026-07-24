@@ -44,7 +44,7 @@ export const authOptions: NextAuthOptions = {
             where: { email: inputEmail },
           })
 
-          if (user && user.passwordHash) {
+          if (user && !Array.isArray(user) && user.passwordHash) {
             if (user.isBlocked) throw new Error('Account is blocked. Contact support.')
             const isValid = await bcrypt.compare(
               credentials.password as string,
@@ -65,18 +65,21 @@ export const authOptions: NextAuthOptions = {
           console.warn('Database offline or table missing, using dev authentication fallback.')
         }
 
-        // Fallback for dev/demo mode (supports any Gmail email or admin email)
-        const isGmail = inputEmail.endsWith('@gmail.com')
-        const isAdmin = inputEmail.includes('admin') || inputEmail === 'admin@vaapi.in'
+        // Fallback for dev/demo mode (supports admin@vaapi.com, customer@vaapi.com, vendor@vaapi.com, any gmail/email)
+        const isVendor = inputEmail.includes('vendor') || inputEmail === 'vendor@vaapi.com'
+        const isAdmin = inputEmail.includes('admin') || inputEmail === 'admin@vaapi.com' || inputEmail === 'admin@vaapi.in'
 
-        if (isGmail || isAdmin) {
-          const role: Role = isAdmin ? 'SUPER_ADMIN' : 'CUSTOMER'
+        if (inputEmail.includes('@')) {
+          let role: Role = Role.CUSTOMER
+          if (isAdmin) role = Role.SUPER_ADMIN
+          else if (isVendor) role = Role.VENDOR
+
           return {
             id: `usr_${Date.now()}`,
             name: inputEmail.split('@')[0].toUpperCase(),
             email: inputEmail,
             role: role,
-            vendorId: null,
+            vendorId: isVendor ? 'vendor_demo_1' : null,
           }
         }
 
