@@ -20,13 +20,13 @@ export default async function AdminProductsPage() {
     })
 
     if (dbProds.length > 0) {
-      products = dbProds.map((p) => ({
+      products = dbProds.map((p: any) => ({
         id: p.id,
         title: p.title,
         brand: p.brand || 'VAAPI',
         price: p.basePrice,
         variantsCount: p.variants.length,
-        stock: p.variants.reduce((sum, v) => sum + v.stock, 0),
+        stock: p.variants.reduce((sum: number, v: any) => sum + v.stock, 0),
         isActive: p.isActive,
       }))
     }

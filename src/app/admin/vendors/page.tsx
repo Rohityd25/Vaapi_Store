@@ -13,7 +13,7 @@ export default async function AdminVendorsPage() {
       include: { products: true },
     })
     if (dbVendors.length > 0) {
-      vendors = dbVendors.map((v) => ({
+      vendors = dbVendors.map((v: any) => ({
         id: v.id,
         name: v.name,
         email: v.contactEmail,

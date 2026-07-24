@@ -25,7 +25,14 @@ export default function RegisterPage() {
         body: JSON.stringify({ name, email, password, phone }),
       })
 
-      const data = await res.json()
+      let data: any = {}
+      const contentType = res.headers.get('content-type')
+      if (contentType && contentType.includes('application/json')) {
+        data = await res.json()
+      } else {
+        const text = await res.text()
+        data = { error: text || `Server error (${res.status})` }
+      }
 
       if (!res.ok) {
         throw new Error(data.error || 'Failed to register account')

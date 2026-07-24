@@ -16,7 +16,7 @@ export default async function AdminOrdersPage() {
     })
 
     if (dbOrders.length > 0) {
-      orders = dbOrders.map((o) => ({
+      orders = dbOrders.map((o: any) => ({
         id: o.id,
         orderNumber: o.orderNumber,
         customer: (o.address as any)?.fullName || 'Guest',

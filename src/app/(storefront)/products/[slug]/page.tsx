@@ -1,4 +1,4 @@
-import { notFound } from 'next'
+import { notFound } from 'next/navigation'
 import { prisma } from '@/lib/prisma'
 import { ProductCard } from '@/components/storefront/ProductCard'
 import { ProductDetailClient } from './ProductDetailClient'
@@ -66,7 +66,7 @@ export default async function ProductPage({ params }: { params: Promise<{ slug: 
         take: 4,
       })
 
-      relatedProducts = dbRelated.map((p) => ({
+      relatedProducts = dbRelated.map((p: any) => ({
         id: p.id,
         title: p.title,
         slug: p.slug,

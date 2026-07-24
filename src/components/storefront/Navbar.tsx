@@ -299,6 +299,7 @@ function MegaMenu({ megaMenu }: { megaMenu: (typeof NAV_CATEGORIES)[0]['megaMenu
 
 // ─── Main Navbar ─────────────────────────────────────────────────────────────
 export function Navbar() {
+  const [mounted, setMounted] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [activeMenu, setActiveMenu] = useState<string | null>(null)
   const [searchOpen, setSearchOpen] = useState(false)
@@ -308,6 +309,7 @@ export function Navbar() {
   const wishlistCount = useWishlistStore((s) => s.items.length)
 
   useEffect(() => {
+    setMounted(true)
     const handleScroll = () => setScrolled(window.scrollY > 20)
     window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
@@ -438,7 +440,7 @@ export function Navbar() {
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
               </svg>
-              {wishlistCount > 0 && (
+              {mounted && wishlistCount > 0 && (
                 <span style={{
                   position: 'absolute',
                   top: '0',
@@ -503,12 +505,12 @@ export function Navbar() {
               }}
               onMouseOver={(e) => { (e.currentTarget as HTMLElement).style.background = '#2d2d4a' }}
               onMouseOut={(e) => { (e.currentTarget as HTMLElement).style.background = 'var(--color-brand-primary)' }}
-              aria-label={`Cart — ${itemCount} items`}
+              aria-label={`Cart — ${mounted ? itemCount : 0} items`}
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>
               </svg>
-              {itemCount > 0 && (
+              {mounted && itemCount > 0 && (
                 <span style={{
                   background: 'var(--color-brand-accent)',
                   borderRadius: '50%',

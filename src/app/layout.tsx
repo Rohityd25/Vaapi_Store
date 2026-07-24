@@ -21,6 +21,8 @@ export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
 }
 
+import { AuthProvider } from '@/components/providers/AuthProvider'
+
 export default function RootLayout({
   children,
 }: {
@@ -36,7 +38,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body>{children}</body>
+      <body>
+        <AuthProvider>{children}</AuthProvider>
+      </body>
     </html>
   )
 }

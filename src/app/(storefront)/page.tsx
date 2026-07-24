@@ -113,7 +113,7 @@ export default async function HomePage() {
     })
 
     if (dbBestsellers.length > 0) {
-      bestsellers = dbBestsellers.map((p) => ({
+      bestsellers = dbBestsellers.map((p: any) => ({
         id: p.id,
         title: p.title,
         slug: p.slug,

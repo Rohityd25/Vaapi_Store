@@ -11,7 +11,7 @@ export default async function AdminCouponsPage() {
   try {
     const dbCoupons = await prisma.coupon.findMany()
     if (dbCoupons.length > 0) {
-      coupons = dbCoupons.map((c) => ({
+      coupons = dbCoupons.map((c: any) => ({
         id: c.id,
         code: c.code,
         type: c.type,

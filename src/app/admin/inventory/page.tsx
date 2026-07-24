@@ -18,7 +18,7 @@ export default async function AdminInventoryPage() {
     })
 
     if (dbVariants.length > 0) {
-      inventory = dbVariants.map((v) => ({
+      inventory = dbVariants.map((v: any) => ({
         id: v.id,
         sku: v.sku,
         product: v.product.title,

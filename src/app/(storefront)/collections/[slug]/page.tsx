@@ -73,7 +73,7 @@ export default async function CollectionPage({ params }: { params: Promise<{ slu
     })
 
     if (dbProducts.length > 0) {
-      products = dbProducts.map((p) => ({
+      products = dbProducts.map((p: any) => ({
         id: p.id,
         title: p.title,
         slug: p.slug,
