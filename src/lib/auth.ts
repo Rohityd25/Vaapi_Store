@@ -23,6 +23,7 @@ declare module 'next-auth' {
 }
 
 export const authOptions: NextAuthOptions = {
+  secret: process.env.NEXTAUTH_SECRET || 'vaapi-store-jwt-secret-key-2026-very-secure',
   session: { strategy: 'jwt' },
   pages: {
     signIn: '/login',

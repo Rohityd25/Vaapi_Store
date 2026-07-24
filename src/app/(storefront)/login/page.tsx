@@ -28,13 +28,14 @@ function LoginForm() {
       })
 
       if (res?.error) {
-        setError('Invalid email or password')
+        setError('Invalid credentials or authentication error. Please try again.')
       } else {
-        router.push(callbackUrl)
-        router.refresh()
+        const isAdmin = email.toLowerCase().includes('admin')
+        const targetUrl = callbackUrl !== '/' ? callbackUrl : (isAdmin ? '/admin' : '/account')
+        window.location.href = targetUrl
       }
     } catch (err) {
-      setError('An error occurred. Please try again.')
+      setError('An error occurred during login. Please try again.')
     } finally {
       setLoading(false)
     }
