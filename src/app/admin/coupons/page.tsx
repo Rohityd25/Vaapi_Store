@@ -2,7 +2,7 @@ import { prisma } from '@/lib/prisma'
 
 const MOCK_COUPONS = [
   { id: '1', code: 'WELCOME10', type: 'PERCENT', value: 10, minOrderValue: 499, usedCount: 42, isActive: true },
-  { id: '2', code: 'VAAPI500', type: 'FLAT', value: 500, minOrderValue: 2499, usedCount: 18, isActive: true },
+  { id: '2', code: 'ATTUS500', type: 'FLAT', value: 500, minOrderValue: 2499, usedCount: 18, isActive: true },
 ]
 
 export default async function AdminCouponsPage() {

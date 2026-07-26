@@ -3,15 +3,20 @@ import './globals.css'
 
 export const metadata: Metadata = {
   title: {
-    default: 'Vaapi Comfort — Premium Streetwear & Fashion',
-    template: '%s | Vaapi Comfort',
+    default: 'Attus — Premium Streetwear & Fashion',
+    template: '%s | Attus',
   },
   description:
-    'Discover premium streetwear and fashion at Vaapi Comfort. Shop the latest collections, bestsellers, and new arrivals with fast delivery across India.',
-  keywords: ['streetwear', 'fashion', 'clothing', 'online shopping', 'India', 'vaapi'],
+    'Discover premium streetwear and fashion at Attus. Shop the latest collections, bestsellers, and new arrivals with fast delivery across India.',
+  keywords: ['streetwear', 'fashion', 'clothing', 'online shopping', 'India', 'attus', 'attus store'],
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
   openGraph: {
-    title: 'Vaapi Comfort — Premium Streetwear & Fashion',
-    description: 'Discover premium streetwear and fashion at Vaapi Comfort.',
+    title: 'Attus — Premium Streetwear & Fashion',
+    description: 'Discover premium streetwear and fashion at Attus.',
     type: 'website',
     locale: 'en_IN',
   },

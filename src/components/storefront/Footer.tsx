@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { Logo } from '@/components/common/Logo'
 
 export function Footer() {
   return (
@@ -16,11 +17,11 @@ export function Footer() {
         >
           {/* Brand Col */}
           <div>
-            <Link href="/" style={{ fontSize: '1.5rem', fontWeight: 900, color: 'white', fontFamily: 'var(--font-display)', display: 'inline-block', marginBottom: '1rem' }}>
-              VAAPI<span style={{ color: 'var(--color-brand-accent)' }}>.</span>
-            </Link>
+            <div style={{ marginBottom: '1rem' }}>
+              <Logo variant="dark" height={40} />
+            </div>
             <p style={{ fontSize: '0.875rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
-              Premium Indian streetwear and fashion brand. Crafted with 240+ GSM heavyweight cotton and signature oversized cuts.
+              ATTUS — Premium streetwear & fashion. Crafted with 240+ GSM heavyweight cotton and signature oversized cuts.
             </p>
 
             <div style={{ display: 'flex', gap: '1rem' }}>
@@ -102,7 +103,7 @@ export function Footer() {
             fontSize: '0.8125rem',
           }}
         >
-          <p>© {new Date().getFullYear()} VAAPI COMFORT PVT LTD. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} ATTUS FASHION PVT LTD. All rights reserved.</p>
           <div style={{ display: 'flex', gap: '1rem' }}>
             <span>🔒 256-Bit SSL Encrypted</span>
             <span>💳 UPI / Cards / COD</span>

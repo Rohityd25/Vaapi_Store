@@ -2,7 +2,7 @@ import Link from 'next/link'
 
 export default async function OrderSuccessPage({ searchParams }: { searchParams: Promise<{ orderNumber?: string }> }) {
   const awaitedSearchParams = await searchParams
-  const orderNumber = awaitedSearchParams.orderNumber || 'VAAPI-89214'
+  const orderNumber = awaitedSearchParams.orderNumber || 'ATTUS-89214'
 
   return (
     <div style={{ padding: '5rem 0', background: 'var(--color-surface-2)', minHeight: '75vh', display: 'flex', alignItems: 'center' }}>

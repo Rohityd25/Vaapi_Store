@@ -8,7 +8,7 @@ const MOCK_SINGLE_PRODUCT = {
   title: 'Aura Oversized Acid Wash T-Shirt',
   slug: 'aura-oversized-acid-wash-tshirt',
   description: 'Heavyweight 240 GSM 100% combed cotton. Signature relaxed oversized drop-shoulder fit with vintage acid-wash finish for an effortlessly edgy aesthetic.',
-  brand: 'VAAPI RAW',
+  brand: 'ATTUS RAW',
   basePrice: 999,
   compareAtPrice: 1999,
   isBestseller: true,

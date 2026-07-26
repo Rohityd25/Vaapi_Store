@@ -13,13 +13,13 @@ export function BrandStory() {
       <div className="container-narrow">
         <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 4rem auto' }}>
           <span style={{ color: 'var(--color-brand-accent)', fontSize: '0.8125rem', fontWeight: 800, letterSpacing: '0.15em', textTransform: 'uppercase', fontFamily: 'var(--font-display)' }}>
-            THE VAAPI WAY
+            THE ATTUS WAY
           </span>
           <h2 style={{ fontSize: 'clamp(1.75rem, 4vw, 2.5rem)', fontWeight: 900, textTransform: 'uppercase', margin: '0.75rem 0 1rem 0' }}>
             BUILT FOR THE STREETS, ENGINEERED FOR COMFORT
           </h2>
           <p style={{ color: '#9ca3af', fontSize: '1rem', lineHeight: 1.6 }}>
-            We reject flimsy fast fashion. VAAPI Comfort blends high-density heavy fabrics with bold artistic expressions so you stand out wherever you go.
+            We reject flimsy fast fashion. ATTUS Comfort blends high-density heavy fabrics with bold artistic expressions so you stand out wherever you go.
           </p>
         </div>
 

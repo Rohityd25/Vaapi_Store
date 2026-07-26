@@ -8,7 +8,7 @@ export default function CreateProductPage() {
   const router = useRouter()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
-  const [brand, setBrand] = useState('VAAPI RAW')
+  const [brand, setBrand] = useState('ATTUS RAW')
   const [category, setCategory] = useState('T-SHIRTS')
   const [price, setPrice] = useState('')
   const [mrp, setMrp] = useState('')
@@ -65,8 +65,8 @@ export default function CreateProductPage() {
           <div>
             <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, marginBottom: '0.375rem' }}>BRAND LINE</label>
             <select value={brand} onChange={(e) => setBrand(e.target.value)} className="input" style={{ width: '100%' }}>
-              <option value="VAAPI RAW">VAAPI RAW</option>
-              <option value="VAAPI LUXE">VAAPI LUXE</option>
+              <option value="ATTUS RAW">ATTUS RAW</option>
+              <option value="ATTUS LUXE">ATTUS LUXE</option>
               <option value="URBAN THREADS">URBAN THREADS</option>
             </select>
           </div>

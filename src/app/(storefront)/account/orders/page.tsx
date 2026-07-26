@@ -4,7 +4,7 @@ import Link from 'next/link'
 
 export default function UserOrdersPage() {
   const sampleOrders = [
-    { id: '1', orderNumber: 'VAAPI-89214', total: 2498, status: 'CONFIRMED', date: '24 Jul 2026', items: ['Aura Oversized Acid Wash T-Shirt (XL)'] },
+    { id: '1', orderNumber: 'ATTUS-89214', total: 2498, status: 'CONFIRMED', date: '24 Jul 2026', items: ['Aura Oversized Acid Wash T-Shirt (XL)'] },
   ]
 
   return (

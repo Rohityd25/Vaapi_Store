@@ -5,6 +5,8 @@ import { signIn } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
 
+import { Logo } from '@/components/common/Logo'
+
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
@@ -43,7 +45,10 @@ function LoginForm() {
 
   return (
     <div style={{ background: 'white', padding: '2.5rem 2rem', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)' }}>
-      <h1 style={{ fontSize: '1.75rem', fontWeight: 900, textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.5rem', fontFamily: 'var(--font-display)' }}>
+      <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+        <Logo height={42} />
+      </div>
+      <h1 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.5rem', fontFamily: 'var(--font-display)' }}>
         WELCOME BACK
       </h1>
       <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', textAlign: 'center', marginBottom: '2rem' }}>

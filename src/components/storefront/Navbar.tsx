@@ -6,6 +6,8 @@ import { useCartStore } from '@/store/cart'
 import { useUIStore } from '@/store/ui'
 import { useWishlistStore } from '@/store/wishlist'
 
+import { Logo } from '@/components/common/Logo'
+
 // ─── Nav category data ───────────────────────────────────────────────────────
 const NAV_CATEGORIES = [
   {
@@ -343,19 +345,7 @@ export function Navbar() {
           }}
         >
           {/* Logo */}
-          <Link
-            href="/"
-            style={{
-              fontFamily: 'var(--font-display)',
-              fontWeight: 900,
-              fontSize: '1.625rem',
-              letterSpacing: '-0.03em',
-              color: 'var(--color-brand-primary)',
-              flexShrink: 0,
-            }}
-          >
-            VAAPI<span style={{ color: 'var(--color-brand-accent)' }}>.</span>
-          </Link>
+          <Logo height={38} />
 
           {/* Desktop Navigation */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flex: 1, justifyContent: 'center' }} className="hidden-mobile">

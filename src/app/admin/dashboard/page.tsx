@@ -10,9 +10,9 @@ export default async function AdminDashboardPage() {
   }
 
   let recentOrders: any[] = [
-    { id: '1', orderNumber: 'VAAPI-89214', customer: 'Rohan Sharma', total: 2498, status: 'CONFIRMED', date: 'Today, 10:45 AM' },
-    { id: '2', orderNumber: 'VAAPI-89213', customer: 'Ananya Verma', total: 1899, status: 'SHIPPED', date: 'Yesterday' },
-    { id: '3', orderNumber: 'VAAPI-89212', customer: 'Karan Patel', total: 999, status: 'DELIVERED', date: '20 Jul 2026' },
+    { id: '1', orderNumber: 'ATTUS-89214', customer: 'Rohan Sharma', total: 2498, status: 'CONFIRMED', date: 'Today, 10:45 AM' },
+    { id: '2', orderNumber: 'ATTUS-89213', customer: 'Ananya Verma', total: 1899, status: 'SHIPPED', date: 'Yesterday' },
+    { id: '3', orderNumber: 'ATTUS-89212', customer: 'Karan Patel', total: 999, status: 'DELIVERED', date: '20 Jul 2026' },
   ]
 
   let lowStockVariants: any[] = [

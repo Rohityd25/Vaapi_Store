@@ -23,7 +23,7 @@ export async function POST(req: Request) {
     }
 
     // Generate unique order number
-    const orderNumber = `VAAPI-${Date.now().toString().slice(-6)}-${Math.floor(1000 + Math.random() * 9000)}`
+    const orderNumber = `ATTUS-${Date.now().toString().slice(-6)}-${Math.floor(1000 + Math.random() * 9000)}`
 
     // Create Order in DB
     const order = await prisma.order.create({

@@ -1,9 +1,9 @@
 import { prisma } from '@/lib/prisma'
 
 const MOCK_ADMIN_ORDERS = [
-  { id: '1', orderNumber: 'VAAPI-89214', customer: 'Rohan Sharma', phone: '+91 9988776655', itemsCount: 2, total: 2498, paymentMethod: 'RAZORPAY', paymentStatus: 'PAID', status: 'CONFIRMED', date: 'Today, 10:45 AM' },
-  { id: '2', orderNumber: 'VAAPI-89213', customer: 'Ananya Verma', phone: '+91 9876543210', itemsCount: 1, total: 1899, paymentMethod: 'COD', paymentStatus: 'PENDING', status: 'SHIPPED', date: 'Yesterday' },
-  { id: '3', orderNumber: 'VAAPI-89212', customer: 'Karan Patel', phone: '+91 9123456789', itemsCount: 1, total: 999, paymentMethod: 'RAZORPAY', paymentStatus: 'PAID', status: 'DELIVERED', date: '20 Jul 2026' },
+  { id: '1', orderNumber: 'ATTUS-89214', customer: 'Rohan Sharma', phone: '+91 9988776655', itemsCount: 2, total: 2498, paymentMethod: 'RAZORPAY', paymentStatus: 'PAID', status: 'CONFIRMED', date: 'Today, 10:45 AM' },
+  { id: '2', orderNumber: 'ATTUS-89213', customer: 'Ananya Verma', phone: '+91 9876543210', itemsCount: 1, total: 1899, paymentMethod: 'COD', paymentStatus: 'PENDING', status: 'SHIPPED', date: 'Yesterday' },
+  { id: '3', orderNumber: 'ATTUS-89212', customer: 'Karan Patel', phone: '+91 9123456789', itemsCount: 1, total: 999, paymentMethod: 'RAZORPAY', paymentStatus: 'PAID', status: 'DELIVERED', date: '20 Jul 2026' },
 ]
 
 export default async function AdminOrdersPage() {

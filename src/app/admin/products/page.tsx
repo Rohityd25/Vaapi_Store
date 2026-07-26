@@ -2,10 +2,10 @@ import { prisma } from '@/lib/prisma'
 import Link from 'next/link'
 
 const MOCK_ADMIN_PRODUCTS = [
-  { id: '1', title: 'Aura Oversized Acid Wash T-Shirt', brand: 'VAAPI RAW', price: 999, variantsCount: 5, stock: 108, isActive: true },
-  { id: '2', title: 'Cyberpunk Cyber-Mesh Graphic Hoodie', brand: 'VAAPI RAW', price: 1899, variantsCount: 3, stock: 37, isActive: true },
+  { id: '1', title: 'Aura Oversized Acid Wash T-Shirt', brand: 'ATTUS RAW', price: 999, variantsCount: 5, stock: 108, isActive: true },
+  { id: '2', title: 'Cyberpunk Cyber-Mesh Graphic Hoodie', brand: 'ATTUS RAW', price: 1899, variantsCount: 3, stock: 37, isActive: true },
   { id: '3', title: 'Tactical Multi-Pocket Cargo Joggers', brand: 'URBAN THREADS', price: 1499, variantsCount: 3, stock: 73, isActive: true },
-  { id: '4', title: 'Solstice Ribbed Seamless Crop Top', brand: 'VAAPI LUXE', price: 699, variantsCount: 3, stock: 55, isActive: true },
+  { id: '4', title: 'Solstice Ribbed Seamless Crop Top', brand: 'ATTUS LUXE', price: 699, variantsCount: 3, stock: 55, isActive: true },
 ]
 
 export default async function AdminProductsPage() {
@@ -23,7 +23,7 @@ export default async function AdminProductsPage() {
       products = dbProds.map((p: any) => ({
         id: p.id,
         title: p.title,
-        brand: p.brand || 'VAAPI',
+        brand: p.brand || 'ATTUS',
         price: p.basePrice,
         variantsCount: p.variants.length,
         stock: p.variants.reduce((sum: number, v: any) => sum + v.stock, 0),

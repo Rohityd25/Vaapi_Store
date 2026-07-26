@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { Logo } from '@/components/common/Logo'
 
 export default function RegisterPage() {
   const router = useRouter()
@@ -50,11 +51,14 @@ export default function RegisterPage() {
     <div style={{ padding: '5rem 0', background: 'var(--color-surface-2)', minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
       <div className="container-narrow" style={{ maxWidth: '460px', width: '100%' }}>
         <div style={{ background: 'white', padding: '2.5rem 2rem', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)' }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 900, textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.5rem', fontFamily: 'var(--font-display)' }}>
+          <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
+            <Logo height={42} />
+          </div>
+          <h1 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.5rem', fontFamily: 'var(--font-display)' }}>
             CREATE AN ACCOUNT
           </h1>
           <p style={{ color: 'var(--color-text-muted)', fontSize: '0.875rem', textAlign: 'center', marginBottom: '2rem' }}>
-            Join VAAPI Comfort for exclusive drops & instant tracking
+            Join ATTUS Comfort for exclusive drops & instant tracking
           </p>
 
           {error && (

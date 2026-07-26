@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { auth } from '@/lib/auth'
+import { Logo } from '@/components/common/Logo'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -37,11 +38,9 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       >
         <div>
           {/* Logo */}
-          <Link href="/admin/dashboard" style={{ display: 'block', padding: '0 0.5rem 1.5rem 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}>
-            <span style={{ fontSize: '1.5rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'white' }}>
-              VAAPI<span style={{ color: 'var(--color-brand-accent)' }}>.ADMIN</span>
-            </span>
-          </Link>
+          <div style={{ padding: '0 0.5rem 1.5rem 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}>
+            <Logo href="/admin/dashboard" variant="dark" height={34} showSubtext subtext=".ADMIN" />
+          </div>
 
           {/* Navigation Links */}
           <nav style={{ display: 'flex', flexDirection: 'column', gap: '0.375rem' }}>
