@@ -48,9 +48,7 @@ export function Logo({
             width: 'auto',
             maxHeight: `${height}px`,
             objectFit: 'contain',
-            // blend mode removes off-white image background on light surfaces, or inverts for dark backgrounds
-            mixBlendMode: isDark ? 'screen' : 'multiply',
-            filter: isDark ? 'invert(1) brightness(1.2)' : 'none',
+            filter: isDark ? 'invert(1) brightness(1.5)' : 'none',
             display: 'block',
           }}
         />
