@@ -39,7 +39,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
         <div>
           {/* Logo */}
           <div style={{ padding: '0 0.5rem 1.5rem 0.5rem', borderBottom: '1px solid rgba(255,255,255,0.1)', marginBottom: '1.5rem' }}>
-            <Logo href="/admin/dashboard" variant="dark" height={34} showSubtext subtext=".ADMIN" />
+            <Logo href="/admin/dashboard" variant="dark" height={48} showSubtext subtext=".ADMIN" />
           </div>
 
           {/* Navigation Links */}

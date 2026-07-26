@@ -345,7 +345,7 @@ export function Navbar() {
           }}
         >
           {/* Logo */}
-          <Logo height={38} />
+          <Logo height={50} />
 
           {/* Desktop Navigation */}
           <nav style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flex: 1, justifyContent: 'center' }} className="hidden-mobile">

@@ -46,7 +46,7 @@ function LoginForm() {
   return (
     <div style={{ background: 'white', padding: '2.5rem 2rem', borderRadius: 'var(--radius-xl)', border: '1px solid var(--color-border)', boxShadow: 'var(--shadow-lg)' }}>
       <div style={{ textAlign: 'center', marginBottom: '1.5rem' }}>
-        <Logo height={42} />
+        <Logo height={64} />
       </div>
       <h1 style={{ fontSize: '1.5rem', fontWeight: 900, textTransform: 'uppercase', textAlign: 'center', marginBottom: '0.5rem', fontFamily: 'var(--font-display)' }}>
         WELCOME BACK

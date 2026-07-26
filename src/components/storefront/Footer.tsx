@@ -18,7 +18,7 @@ export function Footer() {
           {/* Brand Col */}
           <div>
             <div style={{ marginBottom: '1rem' }}>
-              <Logo variant="dark" height={40} />
+              <Logo variant="dark" height={58} />
             </div>
             <p style={{ fontSize: '0.875rem', lineHeight: 1.6, marginBottom: '1.5rem' }}>
               ATTUS — Premium streetwear & fashion. Crafted with 240+ GSM heavyweight cotton and signature oversized cuts.
