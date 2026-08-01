@@ -45,11 +45,10 @@ export default function CheckoutPage() {
             state,
             pincode,
           },
-          items,
-          subtotal: sub,
-          discount: couponDiscount,
-          shippingFee,
-          total: finalTotal,
+          items: items.map((it) => ({
+            variantId: it.variant.id,
+            quantity: it.quantity,
+          })),
           couponCode,
           paymentMethod,
         }),
@@ -61,8 +60,70 @@ export default function CheckoutPage() {
         throw new Error(data.error || 'Failed to place order')
       }
 
-      clearCart()
-      router.push(`/checkout/success?orderNumber=${data.orderNumber}`)
+      // COD → straight to success
+      if (data.paymentMethod === 'COD') {
+        clearCart()
+        router.push(`/checkout/success?orderNumber=${data.orderNumber}`)
+        return
+      }
+
+      // Razorpay in MOCK mode → verify immediately without opening checkout
+      if (data.mock) {
+        const verifyRes = await fetch('/api/payments/razorpay/verify', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: data.orderId,
+            razorpayOrderId: data.razorpayOrderId,
+          }),
+        })
+        const verifyData = await verifyRes.json()
+        if (!verifyRes.ok) throw new Error(verifyData.error || 'Payment verification failed')
+        clearCart()
+        router.push(`/checkout/success?orderNumber=${data.orderNumber}`)
+        return
+      }
+
+      // Real Razorpay: open the checkout modal
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const RzpAny = (window as any).Razorpay
+      if (!RzpAny) {
+        throw new Error('Razorpay SDK not loaded. Please refresh and try again.')
+      }
+      const rzp = new RzpAny({
+        key: data.keyId,
+        amount: data.amount,
+        currency: data.currency,
+        order_id: data.razorpayOrderId,
+        name: 'Attus Store',
+        description: `Order ${data.orderNumber}`,
+        prefill: { name: fullName, email, contact: phone },
+        theme: { color: '#e94560' },
+        handler: async (response: any) => {
+          const verifyRes = await fetch('/api/payments/razorpay/verify', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              orderId: data.orderId,
+              razorpayOrderId: response.razorpay_order_id,
+              razorpayPaymentId: response.razorpay_payment_id,
+              razorpaySignature: response.razorpay_signature,
+            }),
+          })
+          const verifyData = await verifyRes.json()
+          if (!verifyRes.ok) {
+            setError(verifyData.error || 'Payment verification failed')
+            setLoading(false)
+            return
+          }
+          clearCart()
+          router.push(`/checkout/success?orderNumber=${data.orderNumber}`)
+        },
+        modal: {
+          ondismiss: () => setLoading(false),
+        },
+      })
+      rzp.open()
     } catch (err: any) {
       setError(err.message || 'Payment processing failed')
     } finally {
