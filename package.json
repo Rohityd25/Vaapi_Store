@@ -1,0 +1,18 @@
+{
+  "name": "vaapi-store-monorepo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Vaapi Store — Next.js e-commerce (real project in ./frontend, FastAPI reverse-proxy in ./backend)",
+  "scripts": {
+    "dev": "cd frontend && yarn dev",
+    "build": "cd frontend && yarn install --frozen-lockfile && yarn build",
+    "start": "cd frontend && yarn start",
+    "postinstall": "cd frontend && yarn install --frozen-lockfile"
+  },
+  "dependencies": {
+    "next": "16.2.10"
+  },
+  "engines": {
+    "node": ">=22.0.0"
+  }
+}

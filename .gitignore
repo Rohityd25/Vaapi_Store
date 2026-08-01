@@ -57,3 +57,7 @@ __pycache__/
 
 # supervisor logs (if any got into /app)
 /var/
+*.env
+credentials.json
+*.key
+.credentials
