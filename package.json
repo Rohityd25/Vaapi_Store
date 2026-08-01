@@ -11,8 +11,5 @@
   },
   "dependencies": {
     "next": "16.2.10"
-  },
-  "engines": {
-    "node": ">=22.0.0"
   }
 }
