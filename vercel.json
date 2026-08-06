@@ -1,7 +1,7 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": "nextjs",
-  "buildCommand": "cd frontend && yarn install --frozen-lockfile && yarn prisma generate && yarn build",
+  "buildCommand": "cd frontend && yarn prisma generate && yarn build",
   "outputDirectory": "frontend/.next",
   "devCommand": "cd frontend && yarn dev"
 }
