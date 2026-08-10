@@ -23,7 +23,11 @@ export const metadata: Metadata = {
   twitter: {
     card: 'summary_large_image',
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+  metadataBase: (() => {
+    const raw = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'
+    try { return new URL(raw.startsWith('http') ? raw : `https://${raw}`) }
+    catch { return new URL('http://localhost:3000') }
+  })(),
 }
 
 import { AuthProvider } from '@/components/providers/AuthProvider'
