@@ -1,0 +1,55 @@
+import type { Metadata } from 'next'
+import './globals.css'
+
+export const metadata: Metadata = {
+  title: {
+    default: 'Attus — Premium Streetwear & Fashion',
+    template: '%s | Attus',
+  },
+  description:
+    'Discover premium streetwear and fashion at Attus. Shop the latest collections, bestsellers, and new arrivals with fast delivery across India.',
+  keywords: ['streetwear', 'fashion', 'clothing', 'online shopping', 'India', 'attus', 'attus store'],
+  icons: {
+    icon: '/logo.png',
+    shortcut: '/logo.png',
+    apple: '/logo.png',
+  },
+  openGraph: {
+    title: 'Attus — Premium Streetwear & Fashion',
+    description: 'Discover premium streetwear and fashion at Attus.',
+    type: 'website',
+    locale: 'en_IN',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
+}
+
+import { AuthProvider } from '@/components/providers/AuthProvider'
+import { CookieConsent } from '@/components/common/CookieConsent'
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
+  return (
+    <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
+      <body>
+        <AuthProvider>
+          {children}
+          <CookieConsent />
+        </AuthProvider>
+      </body>
+    </html>
+  )
+}
