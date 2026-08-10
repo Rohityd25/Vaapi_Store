@@ -1,11 +1,17 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, use } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 
-export default function CreateProductPage() {
+export default function EditProductPage({
+  params,
+}: {
+  params: Promise<{ id: string }>
+}) {
+  const { id } = use(params)
   const router = useRouter()
+
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [brand, setBrand] = useState('ATTUS RAW')
@@ -13,42 +19,62 @@ export default function CreateProductPage() {
   const [categories, setCategories] = useState<any[]>([])
   const [price, setPrice] = useState('')
   const [mrp, setMrp] = useState('')
+  const [isActive, setIsActive] = useState(true)
   const [isBestseller, setIsBestseller] = useState(false)
-  const [isNewArrival, setIsNewArrival] = useState(true)
+  const [isNewArrival, setIsNewArrival] = useState(false)
 
-  // Image Upload state
-  const [images, setImages] = useState<string[]>([
-    'https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800&q=80',
-  ])
+  // Images state
+  const [images, setImages] = useState<string[]>([])
   const [imageUrlInput, setImageUrlInput] = useState('')
   const [uploadingImage, setUploadingImage] = useState(false)
 
   // Variants state
-  const [variants, setVariants] = useState<any[]>([
-    { size: 'S', color: 'Black', colorHex: '#111111', stock: 25, price: '' },
-    { size: 'M', color: 'Black', colorHex: '#111111', stock: 40, price: '' },
-    { size: 'L', color: 'Black', colorHex: '#111111', stock: 15, price: '' },
-  ])
+  const [variants, setVariants] = useState<any[]>([])
 
-  const [loading, setLoading] = useState(false)
+  const [initialLoading, setInitialLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
 
   useEffect(() => {
-    // Fetch categories
-    fetch('/api/products')
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.products && data.products.length > 0) {
-          const cats = data.products.map((p: any) => p.category).filter(Boolean)
-          const uniqueCats = Array.from(new Set(cats.map((c: any) => c.id))).map((id) =>
-            cats.find((c: any) => c.id === id)
+    // Fetch product details & categories
+    Promise.all([
+      fetch(`/api/products/${id}`).then((res) => res.json()),
+      fetch('/api/products').then((res) => res.json()),
+    ])
+      .then(([prodData, catData]) => {
+        if (prodData.product) {
+          const p = prodData.product
+          setTitle(p.title || '')
+          setDescription(p.description || '')
+          setBrand(p.brand || 'ATTUS RAW')
+          setCategoryId(p.categoryId || '')
+          setPrice(String(p.basePrice || ''))
+          setMrp(p.compareAtPrice ? String(p.compareAtPrice) : '')
+          setIsActive(Boolean(p.isActive))
+          setIsBestseller(Boolean(p.isBestseller))
+          setIsNewArrival(Boolean(p.isNewArrival))
+          setImages(p.images ? p.images.map((i: any) => i.url) : [])
+          setVariants(p.variants || [])
+        } else {
+          setError('Product not found')
+        }
+
+        if (catData.products) {
+          const cats = catData.products.map((p: any) => p.category).filter(Boolean)
+          const uniqueCats = Array.from(new Set(cats.map((c: any) => c.id))).map((catId) =>
+            cats.find((c: any) => c.id === catId)
           )
           setCategories(uniqueCats)
-          if (uniqueCats[0]) setCategoryId(uniqueCats[0].id)
         }
       })
-      .catch(() => {})
-  }, [])
+      .catch((err) => {
+        setError('Failed to load product data')
+      })
+      .finally(() => {
+        setInitialLoading(false)
+      })
+  }, [id])
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -93,7 +119,7 @@ export default function CreateProductPage() {
   const handleAddVariant = () => {
     setVariants((prev) => [
       ...prev,
-      { size: 'XL', color: 'Black', colorHex: '#111111', stock: 10, price: '' },
+      { size: 'XL', color: 'Black', colorHex: '#111111', stock: 10, price },
     ])
   }
 
@@ -109,8 +135,9 @@ export default function CreateProductPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setLoading(true)
+    setSaving(true)
     setError('')
+    setSuccessMessage('')
 
     try {
       const payload = {
@@ -120,26 +147,36 @@ export default function CreateProductPage() {
         categoryId: categoryId || undefined,
         basePrice: Number(price),
         compareAtPrice: mrp ? Number(mrp) : undefined,
+        isActive,
         isBestseller,
         isNewArrival,
         images,
         variants,
       }
 
-      const res = await fetch('/api/products', {
-        method: 'POST',
+      const res = await fetch(`/api/products/${id}`, {
+        method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
       })
 
       const data = await res.json()
-      if (!res.ok) throw new Error(data.error || 'Failed to create product')
+      if (!res.ok) throw new Error(data.error || 'Failed to update product')
 
-      router.push('/admin/products')
+      setSuccessMessage('Product updated successfully!')
+      setTimeout(() => router.push('/admin/products'), 1200)
     } catch (err: any) {
-      setError(err.message || 'Error creating product')
-      setLoading(false)
+      setError(err.message || 'Error updating product')
+      setSaving(false)
     }
+  }
+
+  if (initialLoading) {
+    return (
+      <div style={{ padding: '4rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+        Loading product details...
+      </div>
+    )
   }
 
   return (
@@ -149,9 +186,15 @@ export default function CreateProductPage() {
           ← Back to Products
         </Link>
         <h1 style={{ fontSize: '1.75rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--color-brand-primary)', margin: 0 }}>
-          CREATE NEW PRODUCT
+          EDIT PRODUCT
         </h1>
       </div>
+
+      {successMessage && (
+        <div style={{ padding: '0.875rem 1rem', background: '#dcfce7', border: '1px solid #86efac', color: '#15803d', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', fontWeight: 600 }}>
+          ✅ {successMessage}
+        </div>
+      )}
 
       {error && (
         <div style={{ padding: '0.875rem 1rem', background: '#fef2f2', border: '1px solid #fca5a5', color: '#b91c1c', borderRadius: 'var(--radius-md)', marginBottom: '1.5rem', fontWeight: 600 }}>
@@ -162,19 +205,26 @@ export default function CreateProductPage() {
       <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.75rem' }}>
         {/* Basic Info Box */}
         <div style={{ background: 'white', padding: '2rem', borderRadius: 'var(--radius-xl)', border: '1px solid #e2e8f0', boxShadow: 'var(--shadow-sm)' }}>
-          <h2 style={{ fontSize: '1.125rem', fontWeight: 800, fontFamily: 'var(--font-display)', marginBottom: '1.25rem' }}>
-            1. Basic Information
-          </h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.25rem' }}>
+            <h2 style={{ fontSize: '1.125rem', fontWeight: 800, fontFamily: 'var(--font-display)', margin: 0 }}>
+              1. Basic Information
+            </h2>
+
+            <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', cursor: 'pointer', fontSize: '0.875rem', fontWeight: 700 }}>
+              <input type="checkbox" checked={isActive} onChange={(e) => setIsActive(e.target.checked)} />
+              {isActive ? '🟢 Active in Store' : '🔴 Draft / Hidden'}
+            </label>
+          </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, marginBottom: '0.375rem' }}>PRODUCT TITLE *</label>
-              <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} placeholder="e.g. Aura Oversized Heavyweight Acid Wash T-Shirt" className="input" />
+              <input type="text" required value={title} onChange={(e) => setTitle(e.target.value)} className="input" />
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, marginBottom: '0.375rem' }}>DESCRIPTION</label>
-              <textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} placeholder="Product description, GSM quality, fabric blend, drop shoulder silhouette details..." className="input" style={{ width: '100%', resize: 'vertical' }} />
+              <textarea rows={4} value={description} onChange={(e) => setDescription(e.target.value)} className="input" style={{ width: '100%', resize: 'vertical' }} />
             </div>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
@@ -209,12 +259,12 @@ export default function CreateProductPage() {
           <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1.25rem' }}>
             <div>
               <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, marginBottom: '0.375rem' }}>SELLING PRICE (₹) *</label>
-              <input type="number" required value={price} onChange={(e) => setPrice(e.target.value)} placeholder="999" className="input" />
+              <input type="number" required value={price} onChange={(e) => setPrice(e.target.value)} className="input" />
             </div>
 
             <div>
               <label style={{ display: 'block', fontSize: '0.8125rem', fontWeight: 700, marginBottom: '0.375rem' }}>MRP / STRIKE PRICE (₹)</label>
-              <input type="number" value={mrp} onChange={(e) => setMrp(e.target.value)} placeholder="1999" className="input" />
+              <input type="number" value={mrp} onChange={(e) => setMrp(e.target.value)} className="input" />
             </div>
           </div>
 
@@ -308,7 +358,6 @@ export default function CreateProductPage() {
                     type="text"
                     value={v.size}
                     onChange={(e) => handleVariantChange(idx, 'size', e.target.value)}
-                    placeholder="S, M, L..."
                     className="input"
                     style={{ padding: '0.4rem 0.6rem', fontSize: '0.8125rem' }}
                   />
@@ -320,7 +369,6 @@ export default function CreateProductPage() {
                     type="text"
                     value={v.color}
                     onChange={(e) => handleVariantChange(idx, 'color', e.target.value)}
-                    placeholder="Vintage Black"
                     className="input"
                     style={{ padding: '0.4rem 0.6rem', fontSize: '0.8125rem' }}
                   />
@@ -342,7 +390,6 @@ export default function CreateProductPage() {
                     type="number"
                     value={v.stock}
                     onChange={(e) => handleVariantChange(idx, 'stock', e.target.value)}
-                    placeholder="20"
                     className="input"
                     style={{ padding: '0.4rem 0.6rem', fontSize: '0.8125rem' }}
                   />
@@ -368,8 +415,8 @@ export default function CreateProductPage() {
           <Link href="/admin/products" className="btn btn-outline btn-lg">
             Cancel
           </Link>
-          <button type="submit" disabled={loading} className="btn btn-accent btn-lg" style={{ minWidth: '220px' }}>
-            {loading ? 'CREATING PRODUCT...' : 'SAVE & PUBLISH PRODUCT →'}
+          <button type="submit" disabled={saving} className="btn btn-accent btn-lg" style={{ minWidth: '220px' }}>
+            {saving ? 'SAVING CHANGES...' : 'SAVE CHANGES →'}
           </button>
         </div>
       </form>

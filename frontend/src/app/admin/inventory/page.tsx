@@ -1,85 +1,185 @@
-import { prisma } from '@/lib/prisma'
+'use client'
 
-const MOCK_INVENTORY_VARIANTS = [
-  { id: '1', sku: 'AURA-BLK-S', product: 'Aura Oversized Acid Wash T-Shirt', size: 'S', color: 'Vintage Black', stock: 25, alert: 5 },
-  { id: '2', sku: 'AURA-BLK-M', product: 'Aura Oversized Acid Wash T-Shirt', size: 'M', color: 'Vintage Black', stock: 40, alert: 5 },
-  { id: '3', sku: 'AURA-BLK-XL', product: 'Aura Oversized Acid Wash T-Shirt', size: 'XL', color: 'Vintage Black', stock: 2, alert: 5 },
-  { id: '4', sku: 'CYBER-HOOD-L', product: 'Cyberpunk Cyber-Mesh Hoodie', size: 'L', color: 'Jet Black', stock: 20, alert: 5 },
-  { id: '5', sku: 'CYBER-HOOD-XL', product: 'Cyberpunk Cyber-Mesh Hoodie', size: 'XL', color: 'Jet Black', stock: 1, alert: 5 },
-]
+import { useState, useEffect } from 'react'
 
-export default async function AdminInventoryPage() {
-  let inventory = MOCK_INVENTORY_VARIANTS
+export default function AdminInventoryPage() {
+  const [products, setProducts] = useState<any[]>([])
+  const [loading, setLoading] = useState(true)
+  const [search, setSearch] = useState('')
+  const [updatingId, setUpdatingId] = useState<string | null>(null)
+  const [message, setMessage] = useState('')
 
-  try {
-    const dbVariants = await prisma.productVariant.findMany({
-      include: { product: true },
-      orderBy: { stock: 'asc' },
-    })
-
-    if (dbVariants.length > 0) {
-      inventory = dbVariants.map((v: any) => ({
-        id: v.id,
-        sku: v.sku,
-        product: v.product.title,
-        size: v.size,
-        color: v.color,
-        stock: v.stock,
-        alert: v.lowStockAlert,
-      }))
+  const fetchInventory = async () => {
+    setLoading(true)
+    try {
+      const res = await fetch('/api/products')
+      const data = await res.json()
+      if (data.products) {
+        setProducts(data.products)
+      }
+    } catch (err) {
+      console.error('Failed to load inventory:', err)
+    } finally {
+      setLoading(false)
     }
-  } catch (err) {
-    // Fall back to mock
   }
+
+  useEffect(() => {
+    fetchInventory()
+  }, [])
+
+  const handleStockUpdate = async (productId: string, variantId: string, newStock: number) => {
+    setUpdatingId(variantId)
+    setMessage('')
+    try {
+      const res = await fetch(`/api/products/${productId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          variants: [{ id: variantId, stock: newStock }],
+        }),
+      })
+
+      if (res.ok) {
+        setMessage('Stock level updated successfully!')
+        setTimeout(() => setMessage(''), 2000)
+        fetchInventory()
+      } else {
+        alert('Failed to update stock')
+      }
+    } catch (err) {
+      alert('Error updating stock')
+    } finally {
+      setUpdatingId(null)
+    }
+  }
+
+  // Flatten all variants across products
+  const allVariants: any[] = []
+  products.forEach((p) => {
+    if (p.variants) {
+      p.variants.forEach((v: any) => {
+        allVariants.push({
+          ...v,
+          productId: p.id,
+          productTitle: p.title,
+        })
+      })
+    }
+  })
+
+  const filteredVariants = allVariants.filter(
+    (v) =>
+      v.sku.toLowerCase().includes(search.toLowerCase()) ||
+      v.productTitle.toLowerCase().includes(search.toLowerCase()) ||
+      v.size.toLowerCase().includes(search.toLowerCase())
+  )
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1.5rem', flexWrap: 'wrap', gap: '1rem' }}>
         <div>
-          <h1 style={{ fontSize: '1.875rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--color-brand-primary)' }}>
+          <h1 style={{ fontSize: '1.875rem', fontWeight: 900, fontFamily: 'var(--font-display)', color: 'var(--color-brand-primary)', margin: 0 }}>
             INVENTORY & STOCK CONTROL
           </h1>
-          <p style={{ color: '#64748b', fontSize: '0.875rem' }}>Per-SKU real-time stock levels and low-stock alerts</p>
+          <p style={{ color: '#64748b', fontSize: '0.875rem', margin: 0 }}>
+            Real-time stock management across all size & color product variants
+          </p>
         </div>
+      </div>
 
-        <button className="btn btn-accent btn-sm">+ LOG STOCK ADJUSTMENT</button>
+      {message && (
+        <div style={{ padding: '0.75rem 1rem', background: '#dcfce7', border: '1px solid #86efac', color: '#15803d', borderRadius: 'var(--radius-md)', marginBottom: '1rem', fontWeight: 600 }}>
+          ✅ {message}
+        </div>
+      )}
+
+      {/* Search Input */}
+      <div style={{ marginBottom: '1.25rem' }}>
+        <input
+          type="text"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          placeholder="🔍 Search SKU, product name, or size..."
+          className="input"
+          style={{ maxWidth: '400px', background: 'white' }}
+        />
       </div>
 
       <div style={{ background: 'white', borderRadius: 'var(--radius-xl)', border: '1px solid #e2e8f0', boxShadow: 'var(--shadow-sm)', overflow: 'hidden' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
-          <thead>
-            <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase' }}>
-              <th style={{ padding: '12px 16px' }}>SKU</th>
-              <th style={{ padding: '12px 16px' }}>PRODUCT NAME</th>
-              <th style={{ padding: '12px 16px' }}>SIZE</th>
-              <th style={{ padding: '12px 16px' }}>COLOR</th>
-              <th style={{ padding: '12px 16px' }}>CURRENT STOCK</th>
-              <th style={{ padding: '12px 16px' }}>ALERT THRESHOLD</th>
-              <th style={{ padding: '12px 16px' }}>ACTION</th>
-            </tr>
-          </thead>
-          <tbody>
-            {inventory.map((item) => (
-              <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9', background: item.stock <= item.alert ? '#fff5f5' : 'white' }}>
-                <td style={{ padding: '14px 16px', fontWeight: 700, fontFamily: 'var(--font-display)' }}>{item.sku}</td>
-                <td style={{ padding: '14px 16px', fontWeight: 600 }}>{item.product}</td>
-                <td style={{ padding: '14px 16px' }}>{item.size}</td>
-                <td style={{ padding: '14px 16px' }}>{item.color}</td>
-                <td style={{ padding: '14px 16px' }}>
-                  <span style={{ fontWeight: 900, fontSize: '1rem', color: item.stock <= item.alert ? '#b91c1c' : '#166534', fontFamily: 'var(--font-display)' }}>
-                    {item.stock} {item.stock <= item.alert && '⚠️'}
-                  </span>
-                </td>
-                <td style={{ padding: '14px 16px', color: '#64748b' }}>{item.alert} units</td>
-                <td style={{ padding: '14px 16px' }}>
-                  <button style={{ background: 'var(--color-brand-primary)', color: 'white', border: 'none', padding: '4px 10px', borderRadius: '4px', cursor: 'pointer', fontSize: '0.75rem', fontWeight: 600 }}>
-                    Restock
-                  </button>
-                </td>
+        {loading ? (
+          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+            Loading inventory...
+          </div>
+        ) : filteredVariants.length === 0 ? (
+          <div style={{ padding: '3rem', textAlign: 'center', color: 'var(--color-text-muted)' }}>
+            No variants found.
+          </div>
+        ) : (
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.875rem' }}>
+            <thead>
+              <tr style={{ background: '#f8fafc', borderBottom: '1px solid #e2e8f0', color: '#64748b', fontSize: '0.75rem', textTransform: 'uppercase' }}>
+                <th style={{ padding: '12px 16px' }}>SKU</th>
+                <th style={{ padding: '12px 16px' }}>PRODUCT TITLE</th>
+                <th style={{ padding: '12px 16px' }}>SIZE</th>
+                <th style={{ padding: '12px 16px' }}>COLOR</th>
+                <th style={{ padding: '12px 16px' }}>STOCK QTY</th>
+                <th style={{ padding: '12px 16px' }}>STATUS</th>
+                <th style={{ padding: '12px 16px' }}>QUICK UPDATE</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {filteredVariants.map((item) => {
+                const isLow = item.stock <= 5
+                return (
+                  <tr key={item.id} style={{ borderBottom: '1px solid #f1f5f9', background: isLow ? '#fff5f5' : 'white' }}>
+                    <td style={{ padding: '14px 16px', fontWeight: 700, fontFamily: 'var(--font-display)' }}>
+                      {item.sku}
+                    </td>
+                    <td style={{ padding: '14px 16px', fontWeight: 600 }}>{item.productTitle}</td>
+                    <td style={{ padding: '14px 16px' }}>{item.size}</td>
+                    <td style={{ padding: '14px 16px' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                        <span style={{ width: '12px', height: '12px', borderRadius: '50%', background: item.colorHex || '#111', border: '1px solid #ccc' }} />
+                        {item.color}
+                      </div>
+                    </td>
+                    <td style={{ padding: '14px 16px' }}>
+                      <span style={{ fontWeight: 900, fontSize: '1rem', color: isLow ? '#b91c1c' : '#166534', fontFamily: 'var(--font-display)' }}>
+                        {item.stock} {isLow && '⚠️'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '14px 16px' }}>
+                      <span style={{ padding: '2px 8px', borderRadius: 'var(--radius-sm)', fontSize: '11px', fontWeight: 700, background: isLow ? '#fee2e2' : '#dcfce7', color: isLow ? '#b91c1c' : '#15803d' }}>
+                        {isLow ? 'LOW STOCK' : 'IN STOCK'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '14px 16px' }}>
+                      <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+                        <button
+                          onClick={() => handleStockUpdate(item.productId, item.id, item.stock + 10)}
+                          disabled={updatingId === item.id}
+                          className="btn btn-outline btn-sm"
+                          style={{ padding: '2px 8px', fontSize: '0.75rem' }}
+                        >
+                          +10
+                        </button>
+                        <button
+                          onClick={() => handleStockUpdate(item.productId, item.id, Math.max(0, item.stock - 10))}
+                          disabled={updatingId === item.id}
+                          className="btn btn-outline btn-sm"
+                          style={{ padding: '2px 8px', fontSize: '0.75rem' }}
+                        >
+                          -10
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                )
+              })}
+            </tbody>
+          </table>
+        )}
       </div>
     </div>
   )
